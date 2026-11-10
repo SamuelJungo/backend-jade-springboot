@@ -2,8 +2,8 @@ package com.jade.backend_jade.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.jade.backend_jade.entity.User;
 import com.jade.backend_jade.repository.UserRepository;
@@ -15,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 
 public class UserService {
 
-   @Autowired 
    private final UserRepository userRepository;
+   private final BCryptPasswordEncoder passwordEncoder;
 
    public User saveUser(User user){
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);
    }
 

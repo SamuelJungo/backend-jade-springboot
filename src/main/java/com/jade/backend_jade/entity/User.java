@@ -1,14 +1,19 @@
 package com.jade.backend_jade.entity;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +32,7 @@ import lombok.Setter;
 public class User {
     @Id 
     @GeneratedValue (strategy = GenerationType.UUID)
+    @Column(name ="user_id")
     private UUID id;
 
     @Column 
@@ -43,8 +49,14 @@ public class User {
     private String nif;
     @Column (name = "telefone", columnDefinition = "varchar(255) default '999999999'")
     private String  telefone;
-    @Column (name = "role", columnDefinition = "varchar(255) default 'USER'")
-    private String  role;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "tb_user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> role;
 
     @CreationTimestamp 
     @Column (name = "data_criacao", updatable = false)
